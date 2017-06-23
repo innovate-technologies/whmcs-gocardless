@@ -1,0 +1,5 @@
+{
+    "require": {
+        "gocardless/gocardless-pro": "^1.1"
+    }
+}
