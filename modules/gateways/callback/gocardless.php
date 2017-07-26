@@ -78,7 +78,7 @@ if (!empty($_GET["paynow"])) {
             ]
         ]);
     } catch($e) {
-        die("Payment failed")
+        die("Payment failed");
     }
 
     addInvoicePayment($params['invoiceid'],$payment->id,$params['amount'],gocardless_getFee($params['amount']),"gocardless");
