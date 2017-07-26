@@ -77,12 +77,8 @@ if (!empty($_GET["paynow"])) {
         ]
     ]);
   
-    $fee = $params['amount'] / 100 * 1;
-    if ($fee < 0.20) {
-        $fee = 0.20;
-    } else if ($fee > 2) {
-        $fee = 2;
-    }
+    $fee = gocardless_getFee($params['amount']);
+
 
     addInvoicePayment($params['invoiceid'],$payment->id,$params['amount'],$fee,"gocardless");
 
