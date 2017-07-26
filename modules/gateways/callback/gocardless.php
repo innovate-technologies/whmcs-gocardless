@@ -76,11 +76,8 @@ if (!empty($_GET["paynow"])) {
             "Idempotency-Key" => $token
         ]
     ]);
-  
-    $fee = gocardless_getFee($params['amount']);
 
-
-    addInvoicePayment($params['invoiceid'],$payment->id,$params['amount'],$fee,"gocardless");
+    addInvoicePayment($params['invoiceid'],$payment->id,$params['amount'],gocardless_getFee($params['amount']),"gocardless");
 
     header("Location: " . $params["systemurl"] . "/viewinvoice.php?id=" . $params['invoiceid']);
     
