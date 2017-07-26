@@ -118,7 +118,7 @@ function gocardless_capture($params) {
             'transid' => $payment->id,
             'fees' => gocardless_getFee($params['amount']),
         );
-    } catch($e) {
+    } catch(Exception $e) {
         return array('status' => 'error', 'rawdata' => $e);
     }
 }

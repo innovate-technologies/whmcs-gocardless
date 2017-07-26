@@ -77,7 +77,7 @@ if (!empty($_GET["paynow"])) {
                 "Idempotency-Key" => $token
             ]
         ]);
-    } catch($e) {
+    } catch(Exception $e) {
         die("Payment failed");
     }
 
