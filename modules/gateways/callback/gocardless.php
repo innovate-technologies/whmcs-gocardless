@@ -61,21 +61,25 @@ if (!empty($_GET["paynow"])) {
         die("Invalid transaction");
     }
 
-    $payment = $gocardless->payments()->create([
-        "params" => [
-            "amount" => floatval($params['amount']) * 100,
-            "currency" => $params['currency'],
-            "links" => [
-                "mandate" => $userInfo[0]->gatewayid
+    try {
+        $payment = $gocardless->payments()->create([
+            "params" => [
+                "amount" => floatval($params['amount']) * 100,
+                "currency" => $params['currency'],
+                "links" => [
+                    "mandate" => $userInfo[0]->gatewayid
+                ],
+                "metadata" => [
+                    "invoice_number" => (string)$params['invoiceid']
+                ]
             ],
-            "metadata" => [
-                "invoice_number" => (string)$params['invoiceid']
+            "headers" => [
+                "Idempotency-Key" => $token
             ]
-        ],
-        "headers" => [
-            "Idempotency-Key" => $token
-        ]
-    ]);
+        ]);
+    } catch($e) {
+        die("Payment failed")
+    }
 
     addInvoicePayment($params['invoiceid'],$payment->id,$params['amount'],gocardless_getFee($params['amount']),"gocardless");
 
