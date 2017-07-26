@@ -159,6 +159,7 @@ function gocardless_process_payment_event($event) {
     $gocardless = getConfiguredGoCardless(getGatewayVariables("gocardless"));
     switch ($event["action"]) {
         case "failed":
+        case "cancelled":
         case "charged_back":
             print("Removing " . $event["links"]["payment"] . "!\n");
             $transactions = localAPI("GetTransactions", ["transid" => $event["links"]["payment"]], "API");
@@ -179,7 +180,7 @@ function gocardless_process_payment_event($event) {
 
             break;
         default:
-            print("Don't know how to process a mandate " . $event["action"] . " event\n");
+            print("Don't know how to process a payment " . $event["action"] . " event\n");
             break;
   }
 }
