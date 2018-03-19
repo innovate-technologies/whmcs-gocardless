@@ -178,6 +178,16 @@ function gocardless_process_payment_event($event) {
                 'status' => 'Unpaid'
             ), "API");
 
+            if ($event["action"] == "charged_back") { // bank charge backs don't happen for no reason! This is a clear indicator of fraud we should protect us from
+                $userID = $transactions["transactions"]["transaction"][0]["userid"];
+                $products = gocardless_getProductsOfClient($userID);
+                foreach ($products as $product) {
+                    localAPI("ModuleSuspend", [
+                        'accountid' => $product["id"],
+                        'suspendreason' => 'Direct Debit bank chargeback, please contact support',
+                    ], "API");
+                }
+            }
             break;
         default:
             print("Don't know how to process a payment " . $event["action"] . " event\n");
@@ -201,4 +211,19 @@ function gocardless_getFee($amount) {
     }
 
     return $fee;
+}
+
+function gocardless_getProductsOfClient($cid) {
+    $result = localAPI("GetClientsProducts", [
+        'clientid' => $cid,
+        'limitnum' => 0
+    ], "API");
+    $activeProducts = [];
+    foreach ($result["products"]["product"] as $product) {
+        if ($product["status"] == "Active" || $product["status"] == "Pending") {
+            $activeProducts .= $product;
+        }
+    }
+
+    return $activeProducts;
 }
