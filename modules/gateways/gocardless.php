@@ -180,12 +180,18 @@ function gocardless_process_payment_event($event) {
 
             if ($event["action"] == "charged_back") { // bank charge backs don't happen for no reason! This is a clear indicator of fraud we should protect us from
                 $userID = $transactions["transactions"]["transaction"][0]["userid"];
+                print("Suspending accounts under $userID");
                 $products = gocardless_getProductsOfClient($userID);
                 foreach ($products as $product) {
-                    localAPI("ModuleSuspend", [
-                        'accountid' => $product["id"],
-                        'suspendreason' => 'Direct Debit bank chargeback, please contact support',
-                    ], "API");
+                    print("Suspending account ".$product["id"]);
+                    try{
+                        localAPI("ModuleSuspend", [
+                            'accountid' => $product["id"],
+                            'suspendreason' => 'Direct Debit bank chargeback, please contact support',
+                        ], "API");
+                    } catch(Exception $e) {
+                        print("Suspending account FAILED ".$product["id"]);
+                    }
                 }
             }
             break;
