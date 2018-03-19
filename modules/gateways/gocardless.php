@@ -227,7 +227,7 @@ function gocardless_getProductsOfClient($cid) {
     $activeProducts = [];
     foreach ($result["products"]["product"] as $product) {
         if ($product["status"] == "Active" || $product["status"] == "Pending") {
-            $activeProducts .= $product;
+            $activeProducts[] = $product;
         }
     }
 
