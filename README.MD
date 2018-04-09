@@ -12,3 +12,7 @@ This module was developed at SHOUTca.st on WHMCS 6, later versions should work b
 5) Create a webhook to `https://YOURSITE/modules/gateways/callback/gocardless.php` with a self-generated [random](https://random.org) secret
 6) Configure the WHMCS module with those in your settings
 7) Ready to get rid of your cards!
+
+
+### Note
+This plugin is not oficially supported/endorsed by GoCardless. 
