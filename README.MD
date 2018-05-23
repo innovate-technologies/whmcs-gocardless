@@ -2,7 +2,7 @@ GoCardless for WHMCS
 ===================
 This gateway module for WHMCS allows you to take single payments (subscriptions coming soon) via direct debit powered by GoCardless.
 
-This module was developed at SHOUTca.st on WHMCS 6, later versions should work but haven't been tested. 
+This module was developed at SHOUTca.st on WHMCS 6 and works with later versions (last tested on 7.5.1).
 
 ## Install
 1) Place the files inside WHMCS
