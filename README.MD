@@ -11,6 +11,7 @@ This module was developed at SHOUTca.st on WHMCS 6, later versions should work b
 4) Create a Read/Write Access token inside your GC dashboard
 5) Create a webhook to `https://YOURSITE/modules/gateways/callback/gocardless.php` with a self-generated [random](https://random.org) secret
 6) Configure the WHMCS module with those in your settings
+7) Add an admin user with username `API` for the local API requests to work.
 7) Ready to get rid of your cards!
 
 
