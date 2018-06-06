@@ -11,6 +11,19 @@ require_once __DIR__ . '/../../../includes/gatewayfunctions.php';
 require_once __DIR__ . '/../../../includes/invoicefunctions.php';
 require_once __DIR__ . '/../../../modules/gateways/gocardless.php';
 
+// add getallheaders is not provided by the system
+if (!function_exists('getallheaders')) { 
+    function getallheaders() { 
+           $headers = []; 
+       foreach ($_SERVER as $name => $value) { 
+           if (substr($name, 0, 5) == 'HTTP_') { 
+               $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
+           } 
+       } 
+       return $headers; 
+    } 
+} 
+
 // Fetch gateway configuration parameters.
 $gatewayParams = getGatewayVariables("gocardless");
 // Die if module is not active.
