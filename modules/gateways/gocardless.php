@@ -112,6 +112,11 @@ function gocardless_capture($params) {
             ]
         ]);
 
+        if ($payment->status != "pending_submission") {
+            $gocardless->payments()->cancel($payment->id); // mandate won't work, cancel the payment
+            return array('status' => 'error', 'rawdata' => "Mandate is not fully set up yet, we can not take payments yet."); 
+        }
+
         return array(
             'status' => 'success',
             'rawdata' => $payment,

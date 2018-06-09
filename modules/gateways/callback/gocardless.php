@@ -90,6 +90,11 @@ if (!empty($_GET["paynow"])) {
                 "Idempotency-Key" => $token
             ]
         ]);
+
+        if ($payment->status != "pending_submission") {
+            $gocardless->payments()->cancel($payment->id); // mandate won't work, cancel the payment
+            die("Mandate is not fully set up yet, we can not take payments yet."); 
+        }
     } catch(Exception $e) {
         die("Payment failed");
     }
