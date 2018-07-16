@@ -171,18 +171,24 @@ function gocardless_process_payment_event($event) {
             if (count($transactions["transactions"]["transaction"]) < 1) {
                 return;
             }
+            try {
+                $reverseTransactionId = $transactions["transactions"]["transaction"][0]["id"] . "-reversed";
+                $originalTransactionId = $transactions["transactions"]["transaction"][0]["id"];
+                paymentReversed($reverseTransactionId, $originalTransactionId);
+            } catch (\Exception $e) {
+                // We can also be in WHMCS 6
+                localAPI("UpdateTransaction", [
+                    'transactionid' => $transactions["transactions"]["transaction"][0]["id"],
+                    'amountin' => 0.0,
+                    'fees' => 0.0
+                ], "API");
 
-            localAPI("UpdateTransaction", [
-                'transactionid' => $transactions["transactions"]["transaction"][0]["id"],
-                'amountin' => 0.0,
-                'fees' => 0.0
-            ], "API");
-
-            localAPI("UpdateInvoice", array(
-                'invoiceid' => $transactions["transactions"]["transaction"][0]["invoiceid"],
-                'status' => 'Unpaid'
-            ), "API");
-
+                localAPI("UpdateInvoice", array(
+                    'invoiceid' => $transactions["transactions"]["transaction"][0]["invoiceid"],
+                    'status' => 'Unpaid'
+                ), "API");
+            }
+            
             if ($event["action"] == "charged_back") { // bank charge backs don't happen for no reason! This is a clear indicator of fraud we should protect us from
                 $userID = $transactions["transactions"]["transaction"][0]["userid"];
                 print("Suspending accounts under $userID");
