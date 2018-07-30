@@ -172,8 +172,8 @@ function gocardless_process_payment_event($event) {
                 return;
             }
             try {
-                $reverseTransactionId = $transactions["transactions"]["transaction"][0]["id"] . "-reversed";
-                $originalTransactionId = $transactions["transactions"]["transaction"][0]["id"];
+                $reverseTransactionId = $event["links"]["payment"] . "-reversed";
+                $originalTransactionId = $event["links"]["payment"];
                 paymentReversed($reverseTransactionId, $originalTransactionId);
             } catch (\Exception $e) {
                 // We can also be in WHMCS 6
